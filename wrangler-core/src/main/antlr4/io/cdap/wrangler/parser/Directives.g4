@@ -311,3 +311,46 @@ fragment Int
 fragment Digit
  : [0-9]
  ;
+
+lexer grammar Directives;
+
+// ... (Existing lexer rules) ...
+
+fragment BYTE_UNIT
+    : [kK][bB]
+    | [mM][bB]
+    | [gG][bB]
+    | [tT][bB]
+    | [pP][bB]
+    | [eE][bB]
+    ;
+
+BYTE_SIZE
+    : DIGIT+ ('.' DIGIT+)? BYTE_UNIT
+    ;
+
+fragment TIME_UNIT
+    : [mM][sS]
+    | [sS]
+    | [mM][iI][nN]
+    | [hH]
+    | [dD]
+    ;
+
+TIME_DURATION
+    : DIGIT+ ('.' DIGIT+)? TIME_UNIT
+    ;
+
+// ... (Existing parser rules) ...
+
+value
+    : BOOLEAN
+    | DECIMAL
+    | STRING
+    | column
+    | BYTE_SIZE #byteSizeValue
+    | TIME_DURATION #timeDurationValue
+    ;
+
+// You might need to adjust other rules depending on where these new types are expected as arguments.
+// For the 'aggregate-stats' directive, we'll define specific argument types later.
